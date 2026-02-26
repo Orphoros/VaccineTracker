@@ -1,0 +1,96 @@
+// For format details, see https://containers.dev/implementors/json_reference/.
+// For config options, see the README at: https://github.com/devcontainers/templates/tree/main/src/ruby
+{
+  "name": "vaccine-tracker",
+  "dockerComposeFile": "compose.yaml",
+  "service": "rails-app",
+  "workspaceFolder": "/workspaces/vaccine-tracker",
+
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/rails/devcontainer/features/activestorage": {},
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {"moby":false},
+    "ghcr.io/rails/devcontainer/features/sqlite3": {},
+    "ghcr.io/devcontainers/features/common-utils": {
+      "installZsh": true,
+      "installOhMyZsh": true,
+      "installOhMyZshConfig": true,
+      "configureZshAsDefaultShell": true
+    },
+    "ghcr.io/devcontainers-extra/features/zsh-plugins:0": {
+      "plugins": "zsh-autosuggestions zsh-syntax-highlighting",
+      "omzPlugins": "https://github.com/zsh-users/zsh-autosuggestions.git https://github.com/zsh-users/zsh-syntax-highlighting.git"
+    }
+  },
+
+  "mounts": [
+      "source=vaccine-tracker-history,target=/home/vscode/.local/share/devcontainer-history,type=volume"
+  ],
+
+  "postCreateCommand": "sudo mkdir -p /home/vscode/.local/share/devcontainer-history && sudo chown -R vscode:vscode /home/vscode/.local/share/devcontainer-history || true && [ -e /home/vscode/.zsh_history ] || ln -s /home/vscode/.local/share/devcontainer-history/.zsh_history /home/vscode/.zsh_history || true && [ -e /home/vscode/.bash_history ] || ln -s /home/vscode/.local/share/devcontainer-history/.bash_history /home/vscode/.bash_history || true && bin/setup --skip-server",
+
+  "containerEnv": {
+    "CAPYBARA_SERVER_PORT": "45678",
+    "SELENIUM_HOST": "selenium",
+    "KAMAL_REGISTRY_PASSWORD": "$KAMAL_REGISTRY_PASSWORD"
+  },
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [3000],
+
+  // Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Gruntfuggly.todo-tree",
+        "vscode.git",
+        "bradlc.vscode-tailwindcss",
+        "PKief.material-icon-theme",
+        "zhuangtongfa.material-theme",
+        "eamodio.gitlens",
+        "Shopify.ruby-lsp",
+        "sorbet.sorbet-vscode-extension",
+        "hoovercj.ruby-linter",
+        "bradlc.vscode-tailwindcss",
+        "karunamurti.haml"
+      ],
+      "settings": {
+        "editor.tabSize": 4,
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.fontFamily": "'JetBrainsMono Nerd Font'",
+        "terminal.integrated.fontLigatures.enabled": true,
+        "terminal.integrated.profiles.linux": {
+            "zsh": {
+                "path": "/bin/zsh",
+                "icon": "terminal-linux"
+            }
+        },
+        "gitlens.views.scm.grouped.views": {
+          "commits": true,
+          "branches": false,
+          "remotes": false,
+          "stashes": false,
+          "tags": true,
+          "worktrees": true,
+          "contributors": true,
+          "repositories": false,
+          "searchAndCompare": false,
+          "launchpad": false
+        },
+        "gitlens.advanced.messages": {
+          "suppressCreatePullRequestPrompt": true
+        },
+        "git.confirmSync": false,
+        "git.ignoreRebaseWarning": true,
+        "git.autofetch": true,
+        "git.openRepositoryInParentFolders": "never",
+        "git.replaceTagsWhenPull": true,
+        "git.suggestSmartCommit": false,
+         "ruby.linter.run": "onSave"
+      }
+    }
+  }
+  // Uncomment to connect as root instead. More info: https://containers.dev/implementors/json_reference/#remoteUser.
+  // "remoteUser": "root",
+}

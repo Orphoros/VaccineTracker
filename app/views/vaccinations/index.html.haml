@@ -1,0 +1,60 @@
+.tabs.tabs-lift
+  %input.tab{"aria-label" => "My Vaccines", :name => "vaccinations", :type => "radio", :checked => "checked"}/
+  .tab-content.bg-base-100.border-base-300.p-6.h-full
+    %h3.font-bold Active Vaccinations:
+    - grouped = @vaccinations.group_by { |v| v.vaccines.first.name }.transform_values do |group|
+      - group.max_by { |vaccination| vaccination.received_at + vaccination.vaccines.first.days_valid.to_i.days }
+
+    - grouped.values.select { |vaccination| (vaccination.received_at + vaccination.vaccines.first.days_valid.to_i.days) >= Time.current }.each do |vaccination|
+      - vaccine = vaccination.vaccines.first
+      .collapse.collapse-arrow.bg-base-100.border-base-300.border{:tabindex => "0"}
+        .collapse-title.font-semibold= vaccine.name
+        .collapse-content.text-sm
+          - if vaccine.is_lifelong?
+            #p Lifelong immunity
+          - else
+            #p Expires on #{vaccine.expiration_date_str}
+          #p Received boosters: #{vaccination.vaccines.count { |v| v.is_booster }}
+    
+    %h3.font-bold.mb-4.mt-6 Expired Vaccinations:
+    - grouped.values.select { |vaccination| (vaccination.received_at + vaccination.vaccines.first.days_valid.to_i.days) < Time.current }.each do |vaccination|
+      - vaccine = vaccination.vaccines.first
+      .collapse.collapse-arrow.bg-base-100.border-base-300.border.opacity-50{:tabindex => "0"}
+        .collapse-title.font-semibold.text-red-500= vaccine.name
+        .collapse-content.text-sm
+          Expired on #{vaccine.expiration_date_str}
+
+
+  %input.tab{"aria-label" => "Details", :name => "vaccinations", :type => "radio"}/
+  .tab-content.bg-base-100.border-base-300.p-6
+    = link_to "Download PDF",
+              pdf_vaccinations_path(@vaccinations),
+              class: "btn",
+              target: "_blank",
+              rel: "noopener"
+
+    .overflow-x-auto.rounded-box.border.bg-base-100{:class => "border-base-content/5"}
+      %table.table
+        %thead
+          %tr
+            %th Vaccine
+            %th Time of Vaccination
+            %th Experation
+            %th Valid For
+            %th Is Valid
+            %th Sticker
+        %tbody
+          - sorted = @vaccinations.sort_by { |vaccination| ((vaccination.received_at + vaccination.vaccines.first.days_valid.to_i.days) < Time.current) ? 1 : 0 }
+          - sorted.each_with_index do |vaccination, index|
+            %tr
+              %td.font-bold= vaccination.vaccines.first.name
+              %td= vaccination.received_at.strftime("%B %d, %Y")
+              - vaccine = vaccination.vaccines.first
+              %td= vaccine.expiration_date_str
+              %td= vaccine.validity_in_years_str
+              %td
+                - if !vaccine.expired?
+                  .badge.badge-success.text-white YES
+                - else
+                  .badge.badge-error.text-white NO
+              %td.hover-3d= render(VaccineStickerComponent.new(vaccine: vaccine))

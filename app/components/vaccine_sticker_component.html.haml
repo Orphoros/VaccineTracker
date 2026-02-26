@@ -1,0 +1,14 @@
+.rounded-lg.border.border-gray-200.bg-gray-100.flex.flex-col.aspect-video.h-26
+  - bg_class = @vaccine.is_booster ? 'bg-purple-700' : 'bg-blue-500'
+  .flex-1{class: "#{bg_class} rounded-t-lg flex items-center justify-center"}
+    %h1.text-white.font-bold.p-1= @vaccine.brand.upcase
+  .flex-1.flex.flex-col
+    .flex.flex-row.items-center.justify-center
+      .flex-1
+        %p.text-black.text-right.pr-2.font-bold= @vaccine.name
+      .flex-1.flex.flex-col.items-center.justify-center.h-full
+        .bg-black.text-white.w-full.flex.items-center.justify-center.p-1
+          %p.text-white= @vaccine.batch_number
+    .w-full.flex-1.flex.items-center.justify-center.flex-col
+      %h2.text-black.italic= "#{@vaccine.dose} ml"
+      %h2.text-black= "#{@vaccine.is_booster ? 'Booster'.upcase : 'Base'.upcase}"

@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  received_at: 2026-02-19
+  expires_at: 2026-02-19
+  vaccine: one
+
+two:
+  received_at: 2026-02-19
+  expires_at: 2026-02-19
+  vaccine: two

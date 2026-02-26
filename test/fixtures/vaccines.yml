@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: HEP-A
+  dose: 0.5
+  brand: Avaxim
+  batch_number: YS68DGT4
+  is_booster: false
+
+two:
+  name: DTP
+  dose: 0.5
+  brand: Revaxis
+  batch_number: Y38DGT4
+  is_booster: true

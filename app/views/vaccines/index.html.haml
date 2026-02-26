@@ -1,0 +1,18 @@
+%h1 Vaccines
+
+.overflow-x-auto.rounded-box.border.bg-base-100{:class => "border-base-content/5"}
+  %table.table
+    %thead
+      %tr
+        %th #
+        - Vaccine.attribute_names.reject { |a| %w[id created_at updated_at].include?(a) }.each do |attr|
+          %th= attr.humanize
+        %th Sticker
+    %tbody
+      - @vaccines.each_with_index do |vaccine, index|
+        %tr
+          %th= index + 1
+          - Vaccine.attribute_names.reject { |a| %w[id created_at updated_at].include?(a) }.each do |attr|
+            %td= vaccine.public_send(attr)
+          %td= render(VaccineStickerComponent.new(vaccine: vaccine))
+
